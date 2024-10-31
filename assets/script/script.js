@@ -1,47 +1,146 @@
-function generateDevis() {
-  const form = document.getElementById("devisForm");
-  const services = Array.from(form.elements["service"])
-    .filter((checkbox) => checkbox.checked)
-    .map((checkbox) => checkbox.value);
-  const montant = form.elements["montant"].value;
-  const room = form.elements["room"].value;
-  const divers = form.elements["divers"].value;
+let roomCount = 0;
 
-  let resultHTML = "<h2>Devis</h2>";
-  resultHTML += `<th>Designation</th>`;
-  resultHTML += `<td><p>${room} </p>`;
-  services.forEach((service) => {
-    resultHTML += `<span>${service}, </span>`;
-    resultHTML += `<span>${divers} .</span></td>`;
-  });
-  resultHTML += `<th>montant</th>`;
-  resultHTML += `<td><p>${montant} €</p></td>`;
+const servicePrices = {
+    murs: {
+        "Détapisser": 50,
+        "Poncer": 30,
+        "Peindre (2 couches)": 100,
+        "Fibre": 80
+    },
+    plafond: {
+        "Peindre": 100,
+        "Rénover": 120
+    },
+    sol: {
+        "Carrelage": 200,
+        "Parquet": 150
+    },
+    porte: {
+        "Remplacer": 200,
+        "Réparer": 80
+    },
+    plinthe: {
+        "Installer": 40
+    },
+    divers: {
+        "Électricité": 150,
+        "Plomberie": 200
+    }
+};
 
-  document.getElementById("result").innerHTML = resultHTML;
+function addRoom() {
+    const roomsDiv = document.getElementById("rooms");
+    const roomNameInput = document.getElementById("roomname").value;
+    if (!roomNameInput) {
+        alert("Veuillez entrer un nom pour la pièce.");
+        return;
+    }
+
+    const roomDiv = document.createElement("div");
+    roomCount++;
+
+    roomDiv.className = "room";
+
+    roomDiv.innerHTML = `
+        <label>
+            <p>${roomCount} - ${roomNameInput}:</p>
+            <input type="text" name="room-${roomCount}" value="${roomNameInput}" readonly>
+        </label>
+        <ul>
+            ${generateServiceOptions('murs', roomCount)}
+            ${generateServiceOptions('plafond', roomCount)}
+            ${generateServiceOptions('sol', roomCount)}
+            ${generateServiceOptions('porte', roomCount)}
+            ${generateServiceOptions('plinthe', roomCount)}
+            <li>
+                <label>
+                    Divers:
+                    <input type="text" name="divers-${roomCount}" placeholder="Tâches diverses">
+                </label>
+            </li>
+            <li>
+                <label>
+                    Montant total:
+                    <input type="text" name="montant-${roomCount}" placeholder="Montant en €" readonly>
+                </label>
+            </li>
+        </ul>
+    `;
+
+    roomsDiv.appendChild(roomDiv);
+    document.getElementById("roomname").value = "";
 }
 
-document.getElementById("downloadExcel").addEventListener("click", function () {
-  const resultDiv = document.getElementById("result");
-  const blob = new Blob([resultDiv.innerHTML], {
-    type: "application/vnd.ms-excel",
-  });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "devis.xls";
-  link.click();
-});
+function generateServiceOptions(serviceType, roomNumber) {
+    let optionsHTML = `<li><strong>${serviceType.charAt(0).toUpperCase() + serviceType.slice(1)}:</strong>`;
+    optionsHTML += `<ul>`;
+    for (const [option, price] of Object.entries(servicePrices[serviceType])) {
+        optionsHTML += `
+            <li>
+                <label>
+                    <input type="checkbox" name="${serviceType}-${roomNumber}" value="${option}" data-price="${price}" onchange="updateTotal(${roomNumber})">
+                    ${option} (${price} €)
+                </label>
+            </li>
+        `;
+    }
+    optionsHTML += `</ul></li>`;
+    return optionsHTML;
+}
 
-document.getElementById("downloadPDF").addEventListener("click", function () {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+function updateTotal(roomNumber) {
+    const roomDiv = document.querySelector(`.room:nth-of-type(${roomNumber})`);
+    const checkboxes = roomDiv.querySelectorAll(`input[type="checkbox"]`);
+    let total = 0;
 
-  const headerdiv = document.getElementById("container-devis").innerHTML;
-  const resultDiv = document.getElementById("result").innerText; // Utiliser innerText pour obtenir le texte brut
-  const lines = resultDiv.split("\n");
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            total += parseFloat(checkbox.dataset.price);
+        }
+    });
 
-  lines.forEach((line, index) => {
-    doc.text(line, 10, 10 + index * 10); // Ajuster l'espacement
-  });
+    // Ajout du prix des tâches diverses
+    const diversInput = roomDiv.querySelector(`input[name="divers-${roomNumber}"]`);
+    const diversPrice = parseFloat(diversInput.value) || 0;
 
-  doc.save("devis.pdf");
-});
+    total += diversPrice;
+
+    roomDiv.querySelector(`input[name="montant-${roomNumber}"]`).value = total;
+}
+
+function generateDevis() {
+    const roomSections = document.querySelectorAll(".room");
+    let resultHTML = "<h2>Devis</h2>";
+    resultHTML += '<table class="table">';
+    resultHTML += `<tr><th>Désignation</th><th>Montant</th></tr>`;
+
+    let totalSum = 0;
+
+    roomSections.forEach((roomDiv) => {
+        const roomInput = roomDiv.querySelector('input[name^="room-"]');
+        const montantInput = roomDiv.querySelector(`input[name="montant-${roomCount}"]`);
+        const diversInput = roomDiv.querySelector(`input[name^="divers-"]`);
+
+        if (roomInput.value) {
+            const montant = parseFloat(montantInput.value) || 0;
+
+            // Récupérer les services cochés
+            const services = Array.from(roomDiv.querySelectorAll('input[type="checkbox"]:checked'))
+                .map(checkbox => checkbox.value)
+                .join(", ");
+
+            if (services || diversInput.value) {
+                totalSum += montant;
+
+                resultHTML += `<tr><td>${roomInput.value} ${services ? `(${services})` : ''} ${diversInput.value}</td><td>${montant} €</td></tr>`;
+            }
+        }
+    });
+
+    resultHTML += `<tr><td><strong>Total</strong></td><td>${totalSum} €</td></tr>`;
+    resultHTML += "</table>";
+
+    const container = document.getElementById("container-devis");
+    container.style.display = "block";
+    document.getElementById("result").innerHTML = resultHTML;
+}

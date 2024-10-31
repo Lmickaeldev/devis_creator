@@ -7,6 +7,10 @@ h1 {
     color: #333;
     background: #000;
 }
+ul {
+    list-style-type: none;
+    padding: 0;
+}
 
 form {
     margin-bottom: 20px;
@@ -14,6 +18,12 @@ form {
 
 button {
     margin-top: 10px;
+}
+table ,th,td {
+    width: 100%;
+    border:#000 1px solid;
+    border-spacing: 0;
+    /* border-collapse: collapse; */
 }
 .container-devis{
     width: 755px;

@@ -1,78 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <title>Document</title>
-</head>
-<body>
-    <h1>Devis creator</h1>
-    <form id="devisForm">
-        <label>
-            room 1:
-            <input type="text" name="room" id="room">
-        </label>
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="assets/css/style.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+        <title>Document</title>
+    </head>
+    
+    <body>
+        <h1>Devis Creator</h1>
+        <form id="devisForm">
+            <div id="rooms">
+                <input type="text" name="room" id="roomname" placeholder="Nom de la pièce">
+                <button type="button" onclick="addRoom()">Ajouter une pièce</button>
+                <button type="button" onclick="generateDevis()">Générer le Devis</button>
+            </div>
         <br>
-        <label>
-            <input type="checkbox" name="service" value="murs"> Murs
-        </label>
+        <div id="services">
+            
+        </div>
         <br>
-        <label>
-            <input type="checkbox" name="service" value="plafond"> Plafond
-        </label>
         <br>
-        <label>
-            <input type="checkbox" name="service" value="sol"> sol
-        </label>
         <br>
-        <label>
-            <input type="checkbox" name="service" value="porte + battie"> porte + bâti
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" name="service" value="plinthe"> plinthe
-        </label>
-        <br>
-        <label>
-            Divers
-            <input type="text" name="Divers" id="divers">
-        </label>
-        <br>
-        <label>
-            Montant :
-            <input type="text" name="montant" id="montant">
-        </label>
-        <br>
-        <button type="button" onclick="generateDevis()">Générer le Devis</button>
     </form>
-    <div class="container-devis" id="container-devis">
+
+    <div class="container-devis" id="container-devis" style="display: none;">
         <div class="header">
-            <img src="/assets/img/LogoSOSIE100px.jpg" alt="LogoSOSIE" srcset="">
+            <img src="/assets/img/LogoSOSIE100px.jpg" alt="LogoSOSIE">
             <ul>
-                <li>nom & prenom</li>
-                <li>adresse</li>
-                <li>postal</li>
+                <li>Nom & Prénom</li>
+                <li>Adresse</li>
+                <li>Postal</li>
             </ul>
         </div>
         <div class="container-infos">
             <p>Association loi 1901: N°W601003141</p>
-            <p>1, rue de tillé</p>
-            <p>60000- Beauvais</p>
-            <p> tél: 03 44 45 20 48</p>
+            <p>1, rue de Tillé</p>
+            <p>60000 - Beauvais</p>
+            <p>Tél: 03 44 45 20 48</p>
             <p><a href="#">sosie@orange.fr</a></p>
             <p>SIRET 532 778 271 00025</p>
             <p>N° DE TVA intracommunautaire : FR59532778271</p>
         </div>
 
-        <div id="result">
-        </div>
-        
+        <div id="result"></div>
+        <div id="container-devis"></div>
+
     </div>
+
     <button id="downloadExcel">Télécharger en Excel</button>
     <button id="downloadPDF">Télécharger en PDF</button>
-    
+
     <script src="assets/script/script.js"></script>
 </body>
+
 </html>
