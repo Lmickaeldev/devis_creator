@@ -1,0 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    color: #333;
+    background: #000;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+button {
+    margin-top: 10px;
+}
+.container-devis{
+    width: 755px;
+    margin: auto;
+    position: relative;
+    display: block;
+    justify-content: center;
+}
+.container-devis img{
+    height: 100px;
+    width: auto;
+}
+.container-devis ul{
+    margin-right: 30px;
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+}
+.container-infos{
+    line-height: 3px;
+}
