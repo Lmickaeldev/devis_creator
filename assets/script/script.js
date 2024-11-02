@@ -81,7 +81,7 @@ function afficherPieces() {
     pieceDiv.appendChild(m2Input);
 
     // Charger les tâches pour la pièce
-    fetch("/assets/script/devis.json")
+    fetch("./assets/script/devis.json")
       .then((response) => response.json())
       .then((data) => {
         piece.taches = data.taches;
