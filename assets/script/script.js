@@ -52,19 +52,19 @@ function afficherPieces() {
     pieceDiv.innerHTML = `<h3>${piece.nom}</h3>`;
 
     // Label et champ pour le prix total de la pièce
-    const prixLabel = document.createElement("label");
-    prixLabel.textContent = "Prix total de la pièce :";
-    prixLabel.htmlFor = `prix-${piece.nom}`;
-    pieceDiv.appendChild(prixLabel);
+    // const prixLabel = document.createElement("label");
+    // prixLabel.textContent = "Prix total de la pièce :";
+    // prixLabel.htmlFor = `prix-${piece.nom}`;
+    // pieceDiv.appendChild(prixLabel);
 
-    const prixPieceInput = document.createElement("input");
-    prixPieceInput.type = "text";
-    prixPieceInput.placeholder = "Prix total de la pièce";
-    prixPieceInput.className = "prix-piece";
-    prixPieceInput.id = `prix-${piece.nom}`;
-    prixPieceInput.dataset.piece = piece.nom;
-    pieceDiv.appendChild(prixPieceInput);
-    pieceDiv.appendChild(document.createElement("br"));
+    // const prixPieceInput = document.createElement("input");
+    // prixPieceInput.type = "text";
+    // prixPieceInput.placeholder = "Prix total de la pièce";
+    // prixPieceInput.className = "prix-piece";
+    // prixPieceInput.id = `prix-${piece.nom}`;
+    // prixPieceInput.dataset.piece = piece.nom;
+    // pieceDiv.appendChild(prixPieceInput);
+    // pieceDiv.appendChild(document.createElement("br"));
 
     // Label et champ pour les mètres carrés de la pièce
     const m2Label = document.createElement("label");
@@ -112,6 +112,15 @@ function afficherTaches(piece, pieceDiv) {
     diversInput.dataset.tache = tache.nom;
     tacheDiv.appendChild(diversInput);
 
+    // Champ "Prix" pour chaque tâche
+    const prixInput = document.createElement("input");
+    prixInput.type = "number"; // Type numérique pour le prix
+    prixInput.placeholder = "Prix";
+    prixInput.className = "input-prix";
+    prixInput.dataset.piece = piece.nom;
+    prixInput.dataset.tache = tache.nom;
+    tacheDiv.appendChild(prixInput);
+
     const sousTachesDiv = document.createElement("div");
     sousTachesDiv.className = "sous-taches";
 
@@ -128,21 +137,21 @@ function afficherTaches(piece, pieceDiv) {
     pieceDiv.appendChild(tacheDiv);
   });
 }
+
 function genererDevis() {
   const devisTable = document.createElement("table");
   devisTable.classList.add("devis-table");
 
   devisTable.innerHTML = `
-  <thead>
-  <tr>
-  <th>Désignation</th>
-  <th>Prix de la pièce</th>
-  <th>Mètres carrés</th>
-  </tr>
-  </thead>
-        <tbody>
-        </tbody>
-        `;
+    <thead>
+      <tr>
+        <th>Désignation</th>
+        <th>Prix de la pièce</th>
+        <th>Mètres carrés</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
 
   let totalGeneral = 0;
 
@@ -163,19 +172,27 @@ function genererDevis() {
         return checkbox && checkbox.checked;
       });
 
+      const prixInput = document.querySelector(
+        `input.input-prix[data-piece="${piece.nom}"][data-tache="${tache.nom}"]`
+      );
+      const prixTache = parseFloat(prixInput.value) || 0;
+
       if (sousTacheSelections.length > 0 || diversValue) {
         const sousTaches = sousTacheSelections.map(
           (sousTache) => sousTache.nom
         );
-
-        // Ajout de "Divers" dans la liste des sous-tâches si rempli
         if (diversValue) {
           sousTaches.push(diversValue);
         }
 
+        // Ajouter le prix de la tâche après la liste des sous-tâches
         sousTachesAffichees.push(
-          `<strong>${tache.nom}</strong> : (${sousTaches.join(", ")})`
+          `<strong>${tache.nom}</strong> : (${sousTaches.join(
+            ", "
+          )}) - ${prixTache} €`
         );
+
+        totalPiece += prixTache;
       }
     });
 
@@ -190,14 +207,8 @@ function genererDevis() {
       pieceRow.appendChild(designationCell);
 
       // Colonne Prix de la pièce
-      const prixPieceInput = document.querySelector(
-        `input.prix-piece[data-piece="${piece.nom}"]`
-      );
-      const prixPiece = parseFloat(prixPieceInput.value) || 0;
-      totalPiece += prixPiece;
-
       const prixCell = document.createElement("td");
-      prixCell.textContent = `${prixPiece} €`;
+      prixCell.textContent = `${totalPiece} €`;
       pieceRow.appendChild(prixCell);
 
       // Colonne Mètres carrés
@@ -210,7 +221,6 @@ function genererDevis() {
       pieceRow.appendChild(m2Cell);
 
       devisTable.querySelector("tbody").appendChild(pieceRow);
-
       totalGeneral += totalPiece;
     }
   });
@@ -218,9 +228,9 @@ function genererDevis() {
   const totalGeneralRow = document.createElement("tr");
   totalGeneralRow.classList.add("total-general");
   totalGeneralRow.innerHTML = `
-        <td><strong>Total Général</strong></td>
-        <td colspan="2" style="text-align: right;"><strong>${totalGeneral} €</strong></td>
-        `;
+    <td><strong>Total Général</strong></td>
+    <td colspan="2" style="text-align: right;"><strong>${totalGeneral} €</strong></td>
+  `;
   devisTable.querySelector("tbody").appendChild(totalGeneralRow);
 
   // Récupérer les informations du client
@@ -239,6 +249,11 @@ function genererDevis() {
   document.getElementById("telechargerExcel").style.display = "flex";
   document.getElementById("telechargerPDF").style.display = "flex";
 }
+
+
+
+
+
 // Générer le devis
 document.getElementById("genererDevis").addEventListener("click", function () {
   genererDevis();
@@ -274,7 +289,7 @@ function telechargerPDF() {
     <html>
       <head>
         <title>Impression Devis</title>
-        <link rel="stylesheet" href="/assets/css/style.css"> <!-- Lien vers votre CSS -->
+        <link rel="stylesheet" href="./assets/css/style.css"> <!-- Lien vers votre CSS -->
       </head>
       <body>
         <img src="/assets/img/LogoSOSIE100px.jpg" alt="" srcset="">
