@@ -1,59 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
-    
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="assets/css/style.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-        <title>Document</title>
-    </head>
-    
-    <body>
-        <h1>Devis Creator</h1>
-        <form id="devisForm">
-            <div id="rooms">
-                <input type="text" name="room" id="roomname" placeholder="Nom de la pièce">
-                <button type="button" onclick="addRoom()">Ajouter une pièce</button>
-                <button type="button" onclick="generateDevis()">Générer le Devis</button>
-            </div>
-        <br>
-        <div id="services">
-            
-        </div>
-        <br>
-        <br>
-        <br>
-    </form>
+<html lang="fr">
 
-    <div class="container-devis" id="container-devis" style="display: none;">
-        <div class="header">
-            <img src="/assets/img/LogoSOSIE100px.jpg" alt="LogoSOSIE">
-            <ul>
-                <li>Nom & Prénom</li>
-                <li>Adresse</li>
-                <li>Postal</li>
-            </ul>
-        </div>
-        <div class="container-infos">
-            <p>Association loi 1901: N°W601003141</p>
-            <p>1, rue de Tillé</p>
-            <p>60000 - Beauvais</p>
-            <p>Tél: 03 44 45 20 48</p>
-            <p><a href="#">sosie@orange.fr</a></p>
-            <p>SIRET 532 778 271 00025</p>
-            <p>N° DE TVA intracommunautaire : FR59532778271</p>
-        </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preparation Devis Automatique</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.10/jspdf.plugin.autotable.min.js"></script>
+</head>
 
-        <div id="result"></div>
-        <div id="container-devis"></div>
-
+<body>
+    <h1>Preparation Devis Automatique</h1>
+    <img src="/assets/img/LogoSOSIE100px.jpg" alt="" srcset="">
+    <div id="client-info"></div>
+    <div>
+        <input type="text" id="nomPiece" placeholder="Nom de la pièce" />
+        <button id="ajouterPiece">Ajouter la pièce</button>
     </div>
-
-    <button id="downloadExcel">Télécharger en Excel</button>
-    <button id="downloadPDF">Télécharger en PDF</button>
-
-    <script src="assets/script/script.js"></script>
+    <div id="pieces-container"></div>
+    <button id="genererDevis" style="display: none;">Générer Devis</button>
+    <button id="telechargerExcel" style="display: none;">Télécharger Excel</button>
+    <button id="telechargerPDF" style="display: none;">Télécharger PDF</button>
+    <div id="devis-table" style="display: none;"></div>
+    <script src="/assets/script/script.js"></script>
 </body>
 
 </html>

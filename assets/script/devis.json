@@ -1,0 +1,53 @@
+{
+  "taches": [
+    {
+      "nom": "Murs",
+      "sousTaches": [
+        {
+          "nom": "détapissage"
+        },
+        {
+          "nom": "Enduits"
+        },
+        {
+          "nom": "Peinture 1 couche"
+        },
+        {
+          "nom": "Peinture 2 couches"
+        },
+        {
+          "nom": "Pose de papier peint"
+        },
+        {
+          "nom": "Pose de fibre"
+        }
+        
+      ]
+    },
+    {
+      "nom": "Plafonds",
+      "sousTaches": [
+        {
+          "nom": "poncage"
+        },
+        {
+          "nom": "peinture 1 couche"
+        },
+        {
+          "nom": "peinture 2 couches"
+        }
+      ]
+    },
+    {
+      "nom": "sol",
+      "sousTaches": [
+        {
+          "nom": "pose de revetement sol souple"
+        },
+        {
+          "nom": "pose de revetement sol solide"
+        }
+      ]
+    }
+  ]
+}
