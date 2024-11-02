@@ -236,8 +236,8 @@ function genererDevis() {
   devisContainer.style.display = "block";
 
   // Afficher les boutons de téléchargement
-  document.getElementById("telechargerExcel").style.display = "block";
-  document.getElementById("telechargerPDF").style.display = "block";
+  document.getElementById("telechargerExcel").style.display = "flex";
+  document.getElementById("telechargerPDF").style.display = "flex";
 }
 // Générer le devis
 document.getElementById("genererDevis").addEventListener("click", function () {
