@@ -392,34 +392,23 @@ function telechargerPDF() {
   const nomClient = document.getElementById("nom-client").value;
   const adresseClient = document.getElementById("adresse-client").value;
 
-  // Créer une nouvelle fenêtre
-  const win = window.open("", "", "width=800,height=600");
+  // Créer une section contenant le contenu à convertir en PDF
+  const contenuPDF = document.createElement("div");
 
-  // Écrire le contenu HTML dans la nouvelle fenêtre
-  win.document.write(`
-    <html>
-      <head>
-        <title>Impression Devis</title>
-        <link rel="stylesheet" href="./assets/css/style.css"> <!-- Lien vers votre CSS -->
-      </head>
-      <body>
-        <img src="/assets/img/LogoSOSIE100px.jpg" alt="" srcset="">
-        <h1 class="render">preparation Devis ${nomClient}</h1>
-        <h4>Client : ${nomClient}</h4>
-        <p>Adresse : ${adresseClient}</p>
-        ${devisTable.outerHTML} <!-- Intégrer le tableau de devis -->
-      </body>
-    </html>
-  `);
+  contenuPDF.innerHTML = `
+    <img src="/assets/img/LogoSOSIE100px.jpg" alt="Logo" style="width: 100px; height: auto;">
+    <h1>Préparation Devis - ${nomClient}</h1>
+    <h4>Client : ${nomClient}</h4>
+    <p>Adresse : ${adresseClient}</p>
+    ${devisTable.outerHTML} <!-- Ajouter le tableau de devis -->
+  `;
 
-  // Attendre que le contenu soit chargé
-  win.document.close(); // Nécessaire pour le chargement du document
-  win.onload = function () {
-    // Appeler la fonction d'impression
-    win.print();
-    win.close(); // Fermer la fenêtre après l'impression
-  };
+  // Utiliser html2pdf.js pour convertir ce contenu en PDF
+  html2pdf()
+    .from(contenuPDF) // Prendre le contenu à convertir
+    .save(`${nomClient}_devis.pdf`); // Télécharger le PDF avec le nom du client
 }
+
 
 document
   .getElementById("telechargerExcel")
