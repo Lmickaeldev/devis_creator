@@ -403,17 +403,17 @@ function telechargerPDF() {
     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
   };
 
-  html2pdf().from(contenuPDF).set(opt).save();
-
-
+  
+  
   contenuPDF.innerHTML = `
-    <img src="/assets/img/LogoSOSIE100px.jpg" alt="Logo" style="width: 100px; height: auto;">
-    <h1>Préparation Devis - ${nomClient}</h1>
-    <h4>Client : ${nomClient}</h4>
-    <p>Adresse : ${adresseClient}</p>
-    ${devisTable.outerHTML} <!-- Ajouter le tableau de devis -->
+  <img src="./assets/img/LogoSOSIE100px.jpg" alt="Logo" style="width: 100px; height: auto;">
+  <h1>Préparation Devis - ${nomClient}</h1>
+  <h4>Client : ${nomClient}</h4>
+  <p>Adresse : ${adresseClient}</p>
+  ${devisTable.outerHTML} <!-- Ajouter le tableau de devis -->
   `;
-
+  
+  html2pdf().from(contenuPDF).set(opt).save();
   // Utiliser html2pdf.js pour convertir ce contenu en PDF
   // html2pdf()
   //   .from(contenuPDF) // Prendre le contenu à convertir
