@@ -1,4 +1,5 @@
 const pieces = [];
+document.addEventListener("touchstart", function () {}, true);
 
 // Ajout des champs pour le nom et l'adresse du client
 function ajouterClientInfo() {
@@ -378,7 +379,7 @@ function telechargerExcel() {
   const ws = XLSX.utils.table_to_sheet(devisTable);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Devis");
-  XLSX.writeFile(wb, "devis.xlsx");
+  XLSX.writeFile(wb, "devis.xlsx", { bookType: "xlsx", type: "binary" });
 }
 function telechargerPDF() {
   // Sélectionner le tableau de devis
@@ -393,7 +394,17 @@ function telechargerPDF() {
   const adresseClient = document.getElementById("adresse-client").value;
 
   // Créer une section contenant le contenu à convertir en PDF
-  const contenuPDF = document.createElement("div");
+  const contenuPDF = document.querySelector("#devis-table");
+  const opt = {
+    margin: 1,
+    filename: `devis-${new Date().toISOString()}.pdf`,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+  };
+
+  html2pdf().from(contenuPDF).set(opt).save();
+
 
   contenuPDF.innerHTML = `
     <img src="/assets/img/LogoSOSIE100px.jpg" alt="Logo" style="width: 100px; height: auto;">
@@ -404,9 +415,9 @@ function telechargerPDF() {
   `;
 
   // Utiliser html2pdf.js pour convertir ce contenu en PDF
-  html2pdf()
-    .from(contenuPDF) // Prendre le contenu à convertir
-    .save(`${nomClient}_devis.pdf`); // Télécharger le PDF avec le nom du client
+  // html2pdf()
+  //   .from(contenuPDF) // Prendre le contenu à convertir
+  //   .save(`${nomClient}_devis.pdf`); // Télécharger le PDF avec le nom du client
 }
 
 
