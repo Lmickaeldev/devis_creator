@@ -170,3 +170,8 @@ table ,th,td {
 .render{
     color: black;   
 }
+.avertis{
+    color: red;
+    text-transform: uppercase;
+    font-weight: bold;  
+}

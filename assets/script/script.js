@@ -211,7 +211,7 @@ function genererDevis() {
     <thead>
       <tr>
         <th>Désignation</th>
-        <th>Prix détaillé</th> <!-- Nouvelle colonne pour les prix des sous-tâches -->
+        <th>Prix détaillé</th> <!-- Colonne des prix des sous-tâches avant la colonne Prix de la tâche -->
         <th>Prix de la tâche</th>
         <th>Mètres carrés</th>
       </tr>
@@ -224,10 +224,9 @@ function genererDevis() {
   pieces.forEach((piece) => {
     const sousTachesAffichees = [];
     let totalPiece = 0;
-    let totalM2Piece = 0; // Variable pour totaliser les m² de la pièce
-    let prixSousTaches = []; // Tableau pour stocker les prix des sous-tâches
+    let totalM2Piece = 0;
+    let prixSousTaches = [];
 
-    // Vérification de la tâche "Divers"
     const diversInput = document.querySelector(
       `input.input-divers[data-piece="${piece.nom}"]`
     );
@@ -238,7 +237,6 @@ function genererDevis() {
     );
     const prixDivers = parseFloat(prixDiversInput ? prixDiversInput.value : 0);
 
-    // Vérification du champ m² de "Divers"
     const m2DiversInput = document.querySelector(
       `input.input-m2[data-piece="${piece.nom}"][data-tache="Divers"]`
     );
@@ -250,12 +248,11 @@ function genererDevis() {
           m2Divers > 0 ? m2Divers : "Non renseigné"
         })`
       );
-      prixSousTaches.push(prixDivers); // Ajouter le prix de la tâche Divers
+      prixSousTaches.push(prixDivers);
       totalPiece += prixDivers;
-      totalM2Piece += m2Divers; // Ajouter m² de la tâche Divers
+      totalM2Piece += m2Divers;
     }
 
-    // Ajouter les autres tâches de la pièce
     piece.taches.forEach((tache) => {
       const diversInputTache = document.querySelector(
         `input.input-divers[data-piece="${piece.nom}"][data-tache="${tache.nom}"]`
@@ -292,11 +289,10 @@ function genererDevis() {
           )} - ${prixTache} € (M²: ${m2ValueTache})`
         );
 
-        prixSousTaches.push(prixTache); // Ajouter le prix de la tâche
+        prixSousTaches.push(prixTache);
         totalPiece += prixTache;
-        totalM2Piece += m2ValueTache; // Ajouter m² de la tâche
+        totalM2Piece += m2ValueTache;
 
-        // Si la tâche est "Sol", récupérer Longueur x Largeur
         if (tache.nom === "Sol") {
           const longueurInput = document.querySelector(
             `input.input-longueur[data-piece="${piece.nom}"][data-tache="${tache.nom}"]`
@@ -308,7 +304,6 @@ function genererDevis() {
           const longueur = parseFloat(longueurInput ? longueurInput.value : 0);
           const largeur = parseFloat(largeurInput ? largeurInput.value : 0);
 
-          // Afficher Longueur x Largeur uniquement si les deux sont renseignées
           if (longueur > 0 && largeur > 0) {
             sousTachesAffichees[
               sousTachesAffichees.length - 1
@@ -330,10 +325,10 @@ function genererDevis() {
 
       // Colonne Prix détaillé (affichage des prix des sous-tâches)
       const prixDetailsCell = document.createElement("td");
-      prixDetailsCell.innerHTML = prixSousTaches.join("<br>") + " €"; // Affichage des prix des sous-tâches
+      prixDetailsCell.innerHTML = prixSousTaches.join("<br>") + " €";
       pieceRow.appendChild(prixDetailsCell);
 
-      // Colonne Prix de la tâche (reste inchangé)
+      // Colonne Prix de la tâche (total de la tâche)
       const prixCell = document.createElement("td");
       prixCell.textContent = `${totalPiece} €`;
       pieceRow.appendChild(prixCell);
@@ -342,7 +337,7 @@ function genererDevis() {
       const m2Cell = document.createElement("td");
       m2Cell.textContent = `${
         totalM2Piece > 0 ? totalM2Piece : "Non renseigné"
-      } m²`; // Total des m² de la pièce
+      } m²`;
       pieceRow.appendChild(m2Cell);
 
       devisTable.querySelector("tbody").appendChild(pieceRow);
@@ -358,12 +353,11 @@ function genererDevis() {
   `;
   devisTable.querySelector("tbody").appendChild(totalGeneralRow);
 
-  // Récupérer les informations du client
   const nomClient = document.getElementById("nom-client").value;
   const adresseClient = document.getElementById("adresse-client").value;
 
   const devisContainer = document.getElementById("devis-table");
-  devisContainer.innerHTML = ""; // Réinitialiser le contenu
+  devisContainer.innerHTML = "";
   const clientInfoDiv = document.createElement("div");
   clientInfoDiv.innerHTML = `<h4>Client : ${nomClient}</h4><p>Adresse : ${adresseClient}</p>`;
   devisContainer.appendChild(clientInfoDiv);
