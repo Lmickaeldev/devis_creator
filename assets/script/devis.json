@@ -21,7 +21,6 @@
         {
           "nom": "Pose de fibre"
         }
-        
       ]
     },
     {
@@ -41,6 +40,9 @@
         },
         {
           "nom": "peinture 2 couches"
+        },
+        {
+          "nom": "detapissage"
         }
       ]
     },
@@ -52,6 +54,31 @@
         },
         {
           "nom": "pose de revetement sol solide"
+        }
+      ]
+    },
+    {
+      "nom": "plinthes",
+      "sousTaches": [
+        {
+          "nom": "peinture"
+        }
+      ]
+    },
+    {
+      "nom": "porte",
+      "sousTaches": [
+        {
+          "nom": "porte"
+        },
+        { "nom": "porte+bati" }
+      ]
+    },
+    {
+      "nom": "radiateurs",
+      "sousTaches": [
+        {
+          "nom": "mis en peinture"
         }
       ]
     }

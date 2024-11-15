@@ -211,6 +211,7 @@ function genererDevis() {
     <thead>
       <tr>
         <th>Désignation</th>
+        <th>Prix détaillé</th> <!-- Nouvelle colonne pour les prix des sous-tâches -->
         <th>Prix de la tâche</th>
         <th>Mètres carrés</th>
       </tr>
@@ -224,6 +225,7 @@ function genererDevis() {
     const sousTachesAffichees = [];
     let totalPiece = 0;
     let totalM2Piece = 0; // Variable pour totaliser les m² de la pièce
+    let prixSousTaches = []; // Tableau pour stocker les prix des sous-tâches
 
     // Vérification de la tâche "Divers"
     const diversInput = document.querySelector(
@@ -248,6 +250,7 @@ function genererDevis() {
           m2Divers > 0 ? m2Divers : "Non renseigné"
         })`
       );
+      prixSousTaches.push(prixDivers); // Ajouter le prix de la tâche Divers
       totalPiece += prixDivers;
       totalM2Piece += m2Divers; // Ajouter m² de la tâche Divers
     }
@@ -289,6 +292,7 @@ function genererDevis() {
           )} - ${prixTache} € (M²: ${m2ValueTache})`
         );
 
+        prixSousTaches.push(prixTache); // Ajouter le prix de la tâche
         totalPiece += prixTache;
         totalM2Piece += m2ValueTache; // Ajouter m² de la tâche
 
@@ -324,7 +328,12 @@ function genererDevis() {
       )}`;
       pieceRow.appendChild(designationCell);
 
-      // Colonne Prix de la tâche
+      // Colonne Prix détaillé (affichage des prix des sous-tâches)
+      const prixDetailsCell = document.createElement("td");
+      prixDetailsCell.innerHTML = prixSousTaches.join("<br>") + " €"; // Affichage des prix des sous-tâches
+      pieceRow.appendChild(prixDetailsCell);
+
+      // Colonne Prix de la tâche (reste inchangé)
       const prixCell = document.createElement("td");
       prixCell.textContent = `${totalPiece} €`;
       pieceRow.appendChild(prixCell);
@@ -345,7 +354,7 @@ function genererDevis() {
   totalGeneralRow.classList.add("total-general");
   totalGeneralRow.innerHTML = `
     <td><strong>Total Général</strong></td>
-    <td colspan="2" style="text-align: right;"><strong>${totalGeneral} €</strong></td>
+    <td colspan="3" style="text-align: right;"><strong>${totalGeneral} €</strong></td>
   `;
   devisTable.querySelector("tbody").appendChild(totalGeneralRow);
 
@@ -366,6 +375,8 @@ function genererDevis() {
   document.getElementById("telechargerPDF").style.display = "flex";
 }
 
+
+
 // Générer le devis
 document.getElementById("genererDevis").addEventListener("click", function () {
   genererDevis();
@@ -376,9 +387,22 @@ ajouterClientInfo();
 // function pour telecharger le devis en excel
 function telechargerExcel() {
   const devisTable = document.querySelector(".devis-table");
+
+  // Convertir la table HTML en feuille Excel
   const ws = XLSX.utils.table_to_sheet(devisTable);
+
+  // Définir la largeur des colonnes
+  ws["!cols"] = [
+    { wpx: 175 }, // Colonne A : largeur de 17.5 cm (~175 pixels)
+    { wpx: 20 }, // Colonne B : largeur de 2 cm (~20 pixels)
+    { wpx: 15 }, // Colonne C : largeur de 1.5 cm (~15 pixels)
+  ];
+
+  // Créer un classeur et y ajouter la feuille
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Devis");
+
+  // Télécharger le fichier Excel
   XLSX.writeFile(wb, "devis.xlsx", { bookType: "xlsx", type: "binary" });
 }
 //function pour telecharger le devis en pdf
@@ -404,16 +428,19 @@ function telechargerPDF() {
     jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
   };
 
-  
-  // Ajouter le contenu à la section pdf
+  // Ajouter la date actuelle sans les heures
+  const currentDate = new Date().toLocaleDateString("fr-FR");
+
+  // Ajouter le contenu à la section PDF
   contenuPDF.innerHTML = `
   <img src="./assets/img/LogoSOSIE100px.jpg" alt="Logo" style="width: 100px; height: auto;">
   <h1>Préparation Devis - ${nomClient}</h1>
+  <p><strong>Date :</strong> ${currentDate}</p> <!-- Date actuelle sans les heures -->
   <h4>Client : ${nomClient}</h4>
   <p>Adresse : ${adresseClient}</p>
   ${devisTable.outerHTML} <!-- Ajouter le tableau de devis -->
-  `;
-  
+`;
+
   html2pdf().from(contenuPDF).set(opt).save();
   // Utiliser html2pdf.js pour convertir ce contenu en PDF
   // html2pdf()
