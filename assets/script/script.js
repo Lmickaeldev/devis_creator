@@ -373,7 +373,7 @@ document.getElementById("genererDevis").addEventListener("click", function () {
 
 // Appeler la fonction pour ajouter les champs du client au chargement de la page
 ajouterClientInfo();
-
+// function pour telecharger le devis en excel
 function telechargerExcel() {
   const devisTable = document.querySelector(".devis-table");
   const ws = XLSX.utils.table_to_sheet(devisTable);
@@ -381,6 +381,7 @@ function telechargerExcel() {
   XLSX.utils.book_append_sheet(wb, ws, "Devis");
   XLSX.writeFile(wb, "devis.xlsx", { bookType: "xlsx", type: "binary" });
 }
+//function pour telecharger le devis en pdf
 function telechargerPDF() {
   // Sélectionner le tableau de devis
   const devisTable = document.querySelector(".devis-table");
@@ -396,7 +397,7 @@ function telechargerPDF() {
   // Créer une section contenant le contenu à convertir en PDF
   const contenuPDF = document.querySelector("#devis-table");
   const opt = {
-    margin: 1,
+    margin: [20, 10, 20, 10],
     filename: `devis-${new Date().toISOString()}.pdf`,
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: { scale: 2 },
@@ -404,7 +405,7 @@ function telechargerPDF() {
   };
 
   
-  
+  // Ajouter le contenu à la section pdf
   contenuPDF.innerHTML = `
   <img src="./assets/img/LogoSOSIE100px.jpg" alt="Logo" style="width: 100px; height: auto;">
   <h1>Préparation Devis - ${nomClient}</h1>
