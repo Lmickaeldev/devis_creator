@@ -7,7 +7,7 @@
           "nom": "détapissage"
         },
         {
-          "nom": "Enduits"
+          "nom": "Enduit"
         },
         {
           "nom": "Peinture 1 couche"
@@ -36,13 +36,16 @@
           "nom": "depose dalle polystyrene"
         },
         {
-          "nom": "enduits"
+          "nom": "enduit"
         },
         {
           "nom": "peinture 2 couches"
         },
         {
           "nom": "detapissage"
+        },
+        {
+          "nom": "pose DCL"
         }
       ]
     },
@@ -54,6 +57,9 @@
         },
         {
           "nom": "pose de revetement sol solide"
+        },
+        {
+          "nom":"dépose de parquet"
         }
       ]
     },
